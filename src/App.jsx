@@ -6,7 +6,6 @@ import './App.css';
 
 function App() {
   const [scannedText, setScannedText] = useState(''); 
-  const [error, setError] = useState(null);
 
   useEffect(() => {
     const scannerConfig = { fps: 10, qrbox: 250 };
@@ -15,12 +14,10 @@ function App() {
     const onSuccess = (decodedText) => {
       console.log(`QR Code scanned: ${decodedText}`);
       setScannedText(decodedText);
-      setError(null);
     };
 
     const onError = (errorMessage) => {
       console.error(`QR Code error: ${errorMessage}`);
-      setError('Failed to scan QR Code. Please try again.');
     };
 
     scanner.render(onSuccess, onError);
@@ -47,7 +44,6 @@ function App() {
         <div className="scanner-result">
           <h2>QR Code Value:</h2>
           <p>{scannedText || 'No QR Code scanned yet.'}</p>
-          {error && <p className="error-message">{error}</p>}
         </div>
       </main>
     </div>
