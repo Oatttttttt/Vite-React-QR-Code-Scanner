@@ -50,7 +50,65 @@
 }
 
 .scanner-result {
+  background-color: #ffffff;
+  word-wrap: break-word; 
+  margin: 20px auto;
+}
+
+
+.result-header {
+  font-size: 24px;
+  color: #333;
+  margin-bottom: 10px;
+}
+
+.result-text {
+  font-size: 18px;
+  color: #555;
+  margin-bottom: 20px;
+}
+
+.parsed-header {
+  font-size: 20px;
+  color: #333;
+  margin-bottom: 10px;
+  text-align: center;
+}
+
+.parsed-list {
+  list-style-type: none;
+  padding: 0;
+  text-align: left;
+}
+
+.parsed-item {
+  font-size: 16px;
+  color: #444;
+  background-color: #fff;
+  padding: 10px;
+  margin: 5px 0;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  word-wrap: break-word; 
+  overflow-wrap: break-word; 
+  max-width: 100%; 
+  white-space: normal; 
+}
+
+.rescan-button {
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  font-size: 16px;
+  border-radius: 5px;
+  cursor: pointer;
   margin-top: 20px;
 }
+
+.rescan-button:hover {
+  background-color: #0056b3;
+}
+
 
 
