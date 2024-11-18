@@ -12,7 +12,7 @@ function App() {
   useEffect(() => {
     if (!isScanning) return;
 
-    const scannerConfig = { fps: 10, qrbox: 250 };
+    const scannerConfig = { fps: 30, qrbox: 250 };
     const scanner = new Html5QrcodeScanner("reader", scannerConfig);
 
     const onSuccess = (decodedText) => {
