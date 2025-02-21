@@ -95,11 +95,26 @@ function App() {
     return data;
   };
   
+  const applyVideoMirrorEffect = () => {
+    const checkVideoElement = () => {
+      const videoElement = document.querySelector("#reader__scan_region video");
+      if (videoElement) {
+        videoElement.style.transform = "scaleX(-1)";
+      } else {
+        setTimeout(checkVideoElement, 100);
+      }
+    };
+    checkVideoElement();
+  };
+  
   const checkCameraFacingMode = async () => {    
     const stream = await navigator.mediaDevices.getUserMedia({ video: true });
     const track = stream.getVideoTracks()[0];
     const settings = track.getSettings();
     console.log("check mode --> " + settings.facingMode);
+    if (settings.facingMode === "user") {
+      applyVideoMirrorEffect();
+    }
     setCameraFacingMode(settings.facingMode);
     track.stop();  
   };
