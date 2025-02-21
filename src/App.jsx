@@ -23,6 +23,28 @@ function App() {
     checkVideoElement();
   };
 
+  // const checkCameraFacingMode = async () => {
+  //   try {
+  //     const stream = await navigator.mediaDevices.getUserMedia({
+  //       video: { facingMode: { exact: "environment" } },
+  //     });
+  //     const track = stream.getVideoTracks()[0];
+  //     const settings = track.getSettings();
+  //     console.log("Camera settings:", settings); // Debugging information
+  //     if (settings.facingMode === "user") {
+  //       setFacingMode("user");
+  //       applyVideoMirrorEffect();
+  //     } else if (settings.facingMode === "environment") {
+  //       setFacingMode("environment");
+  //     } else {
+  //       console.warn("Unknown facing mode:", settings.facingMode); // Debugging information
+  //     }
+  //     track.stop();
+  //   } catch (error) {
+  //     console.error("Error checking camera facing mode:", error); // Debugging information
+  //   }
+  // };
+
   const checkCameraFacingMode = async () => {
     try {
       const stream = await navigator.mediaDevices.getUserMedia({
@@ -30,18 +52,23 @@ function App() {
       });
       const track = stream.getVideoTracks()[0];
       const settings = track.getSettings();
-      console.log("Camera settings:", settings); // Debugging information
       if (settings.facingMode === "user") {
         setFacingMode("user");
         applyVideoMirrorEffect();
       } else if (settings.facingMode === "environment") {
         setFacingMode("environment");
-      } else {
-        console.warn("Unknown facing mode:", settings.facingMode); // Debugging information
-      }
+      }else;
       track.stop();
     } catch (error) {
-      console.error("Error checking camera facing mode:", error); // Debugging information
+      if (error.name === "OverconstrainedError") {
+        const stream = await navigator.mediaDevices.getUserMedia({
+          video: { facingMode: "user" },
+        });
+        const track = stream.getVideoTracks()[0];
+        setFacingMode("user");
+        applyVideoMirrorEffect();
+        track.stop();
+      } else ;
     }
   };
 
