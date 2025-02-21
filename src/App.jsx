@@ -8,7 +8,7 @@ function App() {
   const [scannedText, setScannedText] = useState("");
   const [isScanning, setIsScanning] = useState(true);
   const [parsedData, setParsedData] = useState([]);
-  const [cameraFacingMode, setCameraFacingMode] = useState("");
+  const [facingMode, setFacingMode] = useState("");
 
   useEffect(() => {
     if (!isScanning) return;
@@ -37,7 +37,11 @@ function App() {
     };
 
     const onError = (errorMessage) => {
-      console.error(`QR Code error: ${errorMessage}`);
+      if (facingMode === "user") {
+        applyVideoMirrorEffect();
+      } else {
+        console.error(`QR Code error: ${errorMessage}`);
+      }
     };
 
     scanner.render(onSuccess, onError);
@@ -53,7 +57,7 @@ function App() {
 
   useEffect(() => {
     checkCameraFacingMode();
-  }, []);
+  }, [facingMode]);
 
   const handleRescan = () => {
     setScannedText("");
@@ -98,7 +102,7 @@ function App() {
   const applyVideoMirrorEffect = () => {
     const checkVideoElement = () => {
       const videoElement = document.querySelector("#reader__scan_region video");
-      if (videoElement) {
+      if (videoElement && facingMode === "user") {
         videoElement.style.transform = "scaleX(-1)";
       } else {
         setTimeout(checkVideoElement, 100);
@@ -106,19 +110,18 @@ function App() {
     };
     checkVideoElement();
   };
-  
+
   const checkCameraFacingMode = async () => {    
     const stream = await navigator.mediaDevices.getUserMedia({ video: true });
     const track = stream.getVideoTracks()[0];
     const settings = track.getSettings();
-    console.log("check mode --> " + settings.facingMode);
     if (settings.facingMode === "user") {
+      setFacingMode("user");
       applyVideoMirrorEffect();
     }
-    setCameraFacingMode(settings.facingMode);
+    console.log("check mode --> " + settings.facingMode);
     track.stop();  
   };
-
   return (
     <div className="app-container">
       <header>
@@ -136,7 +139,7 @@ function App() {
     <div id="reader" className="qr-reader"></div>
   ) : (
     <div className="scanner-result">
-      <h2 className="result-header">Camera Facing Mode: {cameraFacingMode}</h2>
+      <h2 className="result-header">Camera Facing Mode: {facingMode}</h2>
       <h2 className="result-header">QR Code Value:</h2>
       <p className="result-text">
         {scannedText || "No QR Code scanned yet."}
