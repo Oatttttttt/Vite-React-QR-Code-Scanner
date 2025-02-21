@@ -10,6 +10,41 @@ function App() {
   const [parsedData, setParsedData] = useState([]);
   const [facingMode, setFacingMode] = useState("");
 
+    
+  const applyVideoMirrorEffect = () => {
+    const checkVideoElement = () => {
+      const videoElement = document.querySelector("#reader__scan_region video");
+      if (videoElement && facingMode === "user") {
+        videoElement.style.transform = "scaleX(-1)";
+      } else {
+        setTimeout(checkVideoElement, 100);
+      }
+    };
+    checkVideoElement();
+  };
+
+  const checkCameraFacingMode = async () => {
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({
+        video: { facingMode: { exact: "environment" } },
+      });
+      const track = stream.getVideoTracks()[0];
+      const settings = track.getSettings();
+      console.log("Camera settings:", settings); // Debugging information
+      if (settings.facingMode === "user") {
+        setFacingMode("user");
+        applyVideoMirrorEffect();
+      } else if (settings.facingMode === "environment") {
+        setFacingMode("environment");
+      } else {
+        console.warn("Unknown facing mode:", settings.facingMode); // Debugging information
+      }
+      track.stop();
+    } catch (error) {
+      console.error("Error checking camera facing mode:", error); // Debugging information
+    }
+  };
+
   useEffect(() => {
     if (!isScanning) return;
     const videoConstraints = {
@@ -98,30 +133,7 @@ function App() {
   
     return data;
   };
-  
-  const applyVideoMirrorEffect = () => {
-    const checkVideoElement = () => {
-      const videoElement = document.querySelector("#reader__scan_region video");
-      if (videoElement && facingMode === "user") {
-        videoElement.style.transform = "scaleX(-1)";
-      } else {
-        setTimeout(checkVideoElement, 100);
-      }
-    };
-    checkVideoElement();
-  };
 
-  const checkCameraFacingMode = async () => {    
-    const stream = await navigator.mediaDevices.getUserMedia({ video: true });
-    const track = stream.getVideoTracks()[0];
-    const settings = track.getSettings();
-    if (settings.facingMode === "user") {
-      setFacingMode("user");
-      applyVideoMirrorEffect();
-    }
-    console.log("check mode --> " + settings.facingMode);
-    track.stop();  
-  };
   return (
     <div className="app-container">
       <header>
